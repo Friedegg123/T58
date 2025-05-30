@@ -1,0 +1,233 @@
+:root {
+  --bg-grad-start: #fef3c7;
+  --bg-grad-end: #93c5fd;
+  --grid-color: rgba(0, 0, 0, 0.06);
+  --hl-color: rgba(255, 255, 0, 0.4);
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --radius: 16px;
+  font-family: 'Patrick Hand', cursive;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-hand);
+  color: #222;
+  background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-end));
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: 96px 96px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.notebook {
+  max-width: 960px;
+  margin: 5vh auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.icon-btn {
+  border: none;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* 輸入區 */
+.url-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.url-input input {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  background: var(--input-bg);
+}
+
+.url-input button {
+  padding: 1rem 1.5rem;
+  background: #facc15;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.url-input{ margin-bottom:2.5rem; }
+.slider-row{ margin-bottom:2.5rem; }
+/* 滑桿 */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+input[type="range"] {
+  flex: 1;
+  accent-color: #fbbf24;
+}
+
+/* highlight 區塊 */
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.highlight {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1rem;
+  border-radius: var(--radius);
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.highlight-active {
+  background: var(--hl-color);
+  font-weight: bold;
+}
+
+.feedback-buttons {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.feedback-buttons button {
+  border: none;
+  background: white;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* --- 置中 notebook：水平＋垂直 --- */
+body{
+  display:flex;               /* 讓子元素用 flex 排版 */
+  justify-content:center;     /* 水平置中 */
+  align-items:center;         /* 垂直置中 */
+}
+
+/* notebook 捲動時仍需置中 → 改 max-height + overflow */
+.notebook{
+  max-width:960px;
+  max-height:90vh;            /* 內容過長就捲動，不會頂到螢幕邊 */
+  overflow:auto;
+  margin:0;                   /* 交給 flex 置中，不再用 margin:5vh auto */
+}
+
+/* ----- 專屬「小卡」容器，加陰影 + 內距 ----- */
+.form-card{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(6px);
+  border-radius:16px;
+  padding:2rem 3rem;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+  max-width:520px;
+  width:100%;
+  margin:auto;                /* 讓它在 notebook 中間 */
+}
+
+/* ----- 讓 input & button 更大、更柔和 ----- */
+.form-card input{
+  width:100%;
+  font-size:1.1rem;
+  padding:.8rem 1rem;
+  border:1px solid #ddd;
+  border-radius:12px;
+  margin-bottom:1rem;
+  background:#fffefc;
+}
+.form-card button{
+  width:100%;
+  padding:.9rem 0;
+  font-size:1.1rem;
+  background:linear-gradient(90deg,#facc15,#fbbf24);
+  border:none;border-radius:12px;
+  box-shadow:0 3px 8px rgba(0,0,0,.12);
+  cursor:pointer;
+}
+
+/* 左上便利貼 */
+body::after{
+  content:'';
+  position:fixed;
+  top:60px; left:40px;
+  width:100px; height:100px;
+  background:#fef3c7;
+  border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  transform:rotate(-4deg);
+  z-index:0;
+}
+
+/* 右下便利貼 */
+body .sticky{
+  position:fixed;
+  right:60px; bottom:40px;
+  width:120px; height:120px;
+  background:#fde68a;
+  border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  transform:rotate(3deg);
+  z-index:0;
+}
+
+.welcome-text {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  margin: 0.5rem 0 2rem;
+}
+
+.notebook.plain {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+}

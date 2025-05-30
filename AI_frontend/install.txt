@@ -1,0 +1,8 @@
+pip install python-dotenv
+pip install fastapi uvicorn sqlalchemy pymysql passlib[bcrypt]
+pip install jinja2 python-multipart
+pip install newspaper3k
+pip install newspaper3k tqdm nltk
+pip install lxml_html_clean
+*database叫AI
+*執行: uvicorn main:app --reload

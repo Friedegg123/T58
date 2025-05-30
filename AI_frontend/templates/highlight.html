@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Highlight Notebook</title>
+
+  <link rel="stylesheet" href="/static/style.css?v=20240530" />
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <style>
+    .logout-btn {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(6px);
+      border: none;
+      font-size: 1rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      z-index: 10;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .welcome-text {
+      font-size: 1.1rem;
+      opacity: 0.85;
+      margin: 0.5rem 0 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <button class="logout-btn" onclick="logout()">登出</button>
+
+  <div class="notebook">
+    <header class="header">
+      <h1>📒 Highlight Notebook</h1>
+    </header>
+    <p id="welcome" class="welcome-text">您好，使用者</p>
+
+    <div class="url-input">
+      <input type="text" id="article-url" placeholder="請貼上文章網址…" />
+      <button id="load-btn">載入</button>
+    </div>
+
+    <div class="slider-row">
+      <label for="threshold">分數門檻：</label>
+      <input id="threshold" type="range" min="0" max="1" step="0.05" value="0.5" />
+      <span id="threshold-value">0.50</span>
+    </div>
+
+    <section id="highlight-list" class="highlight-list"></section>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const highlights = [];
+      const listEl   = document.getElementById('highlight-list');
+      const slider   = document.getElementById('threshold');
+      const valEl    = document.getElementById('threshold-value');
+      const loadBtn  = document.getElementById('load-btn');
+      const welcomeEl = document.getElementById('welcome');
+
+      const username = localStorage.getItem('username') || '訪客';
+      welcomeEl.textContent = `您好，${username}`;
+
+      function render(t) {
+        listEl.innerHTML = '';
+        highlights.forEach(({ text, score }) => {
+          if (score < t) return;
+          const div = document.createElement('div');
+          div.className = 'highlight highlight-active';
+          div.innerHTML = `
+            <div class="text">${text}</div>
+            <div class="feedback-buttons">
+              <button onclick="sendFeedback('${text.replaceAll("'", "\\'")}', 1)">👍</button>
+              <button onclick="sendFeedback('${text.replaceAll("'", "\\'")}', 0)">👎</button>
+            </div>`;
+          listEl.appendChild(div);
+        });
+
+        if (!listEl.children.length) {
+          listEl.innerHTML = '<p style="opacity:.6;">（目前沒有句子，請貼上網址並載入）</p>';
+        }
+      }
+
+      slider.addEventListener('input', e => {
+        const val = parseFloat(e.target.value).toFixed(2);
+        valEl.textContent = val;
+        if (highlights.length) render(parseFloat(val));
+      });
+
+      loadBtn.addEventListener('click', fetchArticle);
+
+      async function fetchArticle() {
+        const url = document.getElementById('article-url').value.trim();
+        if (!url) return alert('請先貼上網址！');
+
+        listEl.innerHTML = '<p>文章載入中，請稍候...</p>';
+        try {
+          const resp = await fetch('http://localhost:8000/extract', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+          if (!resp.ok) throw new Error('server');
+          const data = await resp.json();
+          highlights.length = 0;
+          data.forEach(p => {
+            if (p && p.text && typeof p.score === 'number') highlights.push(p);
+          });
+          render(parseFloat(slider.value));
+        } catch (e) {
+          listEl.innerHTML = '<p style="color:red;">載入失敗，請稍後再試</p>';
+          console.error(e);
+        }
+      }
+
+      window.sendFeedback = async function (sentence, label) {
+        const user_id = localStorage.getItem("user_id");
+        try {
+          await fetch("http://localhost:8000/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sentence, label, user_id })
+          });
+        } catch (e) {
+          console.log("回饋送出失敗");
+        }
+
+        const toast = document.createElement('div');
+        toast.textContent = "已收到回饋，謝謝你！";
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#4ade80';
+        toast.style.color = '#fff';
+        toast.style.padding = '10px 16px';
+        toast.style.borderRadius = '10px';
+        toast.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+        toast.style.zIndex = 9999;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      };
+
+      window.logout = function () {
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('username');
+        alert('您已成功登出！');
+        window.location.href = 'index.html';
+      };
+
+      render(parseFloat(slider.value));
+    });
+  </script>
+</body>
+</html>
