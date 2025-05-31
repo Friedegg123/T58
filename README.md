@@ -1,4 +1,4 @@
-# Highlight Bot
+# Highlight Agent
 
 > 自動為使用者提供文章重點句子，並支援基於使用者回饋的個性化微調
 
