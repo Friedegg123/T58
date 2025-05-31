@@ -7,7 +7,7 @@
 ## 一、專案簡介（Overview）
 
 - **任務描述**  
-  - 本專案旨在實作一套「Highlight Bot」系統：  
+  - 本專案旨在實作一套「Highlight Agent」系統：  
     1. 使用者可以在網頁上貼入文章 URL 或全文文字，系統會自動分析並找出文章中的重點句子，並以高亮方式呈現。  
     2. 使用者能對系統標註出的重點句子給予「好／壞」回饋，後端會收集這些二元標籤，並定期（或按需）將回饋資料整合到模型重新訓練流程，漸進式微調模型以符合個人需求。  
 
@@ -18,7 +18,7 @@
 
 - **關鍵特色**  
   1. **SBERT 嵌入 + MLP/GBDT 混合模型**  
-     - 先利用 [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)（或其他 SBERT 模型）為每句一句產生 768 維向量。  
+     - 先利用 [all-mpnet-base-v2](https://huggingface.co/sentence-transformers/all-mpnet-base-v2)為每句一句產生 768 維向量。  
      - 再結合多層感知機 (MLP) + CatBoost + XGBoost 組成一個三模型集成 (ensemble) 預測架構，確保對正負樣本不平衡資料能有較佳表現。  
   2. **使用者回饋微調**  
      - 前端提供「讚／踩」按鈕，使用者可以二元標註系統高亮的句子是否符合需求。  
