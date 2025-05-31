@@ -58,12 +58,10 @@ AI/
          └── style.css
 
 ---
-
-## 三、其他
-
+#小提醒
 ---
-環境設置請參照requyrements.txt
-pytyon為3.10版本
+環境設置請參照requirements.txt
+python為3.10版本
 啟動後端指令   uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 啟動前端指令   進入front/執行python main.py
 實驗結果:
