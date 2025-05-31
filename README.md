@@ -56,3 +56,16 @@ AI/
          ├── CH.png
          ├── script.js
          └── style.css
+
+---
+
+## 三、其他
+
+---
+環境設置請參照requyrements.txt
+pytyon為3.10版本
+啟動後端指令   uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+啟動前端指令   進入front/執行python main.py
+實驗結果:
+![image](https://github.com/user-attachments/assets/a13a39c4-bf24-47ba-a57d-bb388c4832bb)
+
