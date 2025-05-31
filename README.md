@@ -70,5 +70,6 @@ python為3.10版本
 啟動前端指令   進入front/執行python main.py
 
 實驗結果:
+
 ![image](https://github.com/user-attachments/assets/a13a39c4-bf24-47ba-a57d-bb388c4832bb)
 
