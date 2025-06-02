@@ -63,6 +63,8 @@ AI/
 ---
 環境設置請參照requirements.txt
 
+下載之後要注意外面只能包一層資料夾，不然可能會遇到路徑錯誤
+
 python版本：3.10
 
 啟動後端指令：uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
